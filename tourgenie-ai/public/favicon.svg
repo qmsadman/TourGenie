@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- The compass mark the app already uses for its brand, on the ink ground
+       so the tab icon reads at 16px in both a light and a dark browser chrome.
+       Brand hexes rather than the CSS variables: a favicon is loaded outside
+       the document and can't see them. -->
+  <rect width="64" height="64" rx="16" fill="#0B1F2E"/>
+  <circle cx="32" cy="32" r="19" fill="none" stroke="#1C8C82" stroke-width="3"/>
+  <!-- The needle: sunset pointing north-east, teal returning. -->
+  <path d="M41 23 L35.5 35.5 L23 41 L28.5 28.5 Z" fill="#EF8354"/>
+  <circle cx="32" cy="32" r="2.6" fill="#F7F2E7"/>
+</svg>
