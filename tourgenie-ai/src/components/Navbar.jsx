@@ -18,12 +18,26 @@ export default function Navbar() {
           <a href="#features" className="text-sm font-medium text-paper/80 hover:text-paper">Features</a>
           <a href="#about" className="text-sm font-medium text-paper/80 hover:text-paper">About</a>
         </nav>
-        <Link
-          to={user ? "/dashboard" : "/login"}
-          className="text-sm font-semibold bg-sunset hover:bg-sunset-dark text-ink-fixed px-4 py-2 rounded-full transition-colors"
-        >
-          {user ? "Dashboard" : "Log in"}
-        </Link>
+        {user ? (
+          <Link
+            to="/dashboard"
+            className="text-sm font-semibold bg-sunset hover:bg-sunset-dark text-ink-fixed px-4 py-2 rounded-full transition-colors"
+          >
+            Dashboard
+          </Link>
+        ) : (
+          <div className="flex items-center gap-2">
+            <Link to="/login" className="text-sm font-medium text-paper/90 hover:text-paper px-2 py-2">
+              Log in
+            </Link>
+            <Link
+              to="/register"
+              className="text-sm font-semibold bg-sunset hover:bg-sunset-dark text-ink-fixed px-4 py-2 rounded-full transition-colors"
+            >
+              Register
+            </Link>
+          </div>
+        )}
       </div>
     </header>
   );

@@ -83,7 +83,11 @@ export default function Login() {
       </form>
 
       <p className="text-center text-sm text-paper/50 mt-6">
-        <Link to="/" className="text-teal hover:text-teal-dark">Back to home</Link>
+        New to TourGenie?{" "}
+        <Link to="/register" className="text-teal hover:text-teal-dark">Create an account</Link>
+      </p>
+      <p className="text-center text-xs text-paper/40 mt-4">
+        <Link to="/" className="hover:text-paper/70">Back to home</Link>
       </p>
     </AuthLayout>
   );

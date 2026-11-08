@@ -30,6 +30,33 @@ export const login = asyncHandler(async (req, res) => {
   res.json({ token: generateToken(user), user: publicUser(user) });
 });
 
+export const register = asyncHandler(async (req, res) => {
+  const name = String(req.body?.name || "").trim();
+  const email = String(req.body?.email || "").trim().toLowerCase();
+  const password = String(req.body?.password || "");
+
+  if (!name || !email || !password) {
+    return res.status(400).json({ message: "Name, email, and password are required" });
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ message: "Enter a valid email address" });
+  }
+  if (password.length < 6) {
+    return res.status(400).json({ message: "Password must be at least 6 characters" });
+  }
+  if (await User.exists({ email })) {
+    return res.status(409).json({ message: "An account with this email already exists" });
+  }
+
+  const user = await User.create({
+    name,
+    email,
+    password_hash: await bcrypt.hash(password, 10),
+    email_verified: false,
+  });
+  res.status(201).json({ token: generateToken(user), user: publicUser(user) });
+});
+
 export const getMe = asyncHandler(async (req, res) => {
   res.json({ user: publicUser(req.user) });
 });

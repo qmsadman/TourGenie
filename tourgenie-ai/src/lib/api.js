@@ -42,6 +42,7 @@ async function request(path, { method = "GET", body, auth = true } = {}) {
 }
 
 export const authApi = {
+  register: (payload) => request("/auth/register", { method: "POST", body: payload, auth: false }),
   login: (payload) => request("/auth/login", { method: "POST", body: payload, auth: false }),
   me: () => request("/auth/me"),
 };

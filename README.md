@@ -30,5 +30,7 @@ Requirements: Node.js 20.19+ (or 22.12+) and a MongoDB connection string.
 Open the Vite URL shown in the client terminal. The demo login is
 `moontashir@tourgenie.ai` / `Traveler123!`.
 
-The client contains three routes: `/`, `/login`, and `/dashboard`. The API
-uses MongoDB for authentication and the dashboard's saved trips.
+The client contains four routes: `/`, `/login`, `/register`, and
+`/dashboard`. You can create an account from the Register page; the API stores
+accounts and saved trips in MongoDB. The demo account remains available after
+seeding.

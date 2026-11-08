@@ -41,6 +41,13 @@ export function AuthProvider({ children }) {
     return user;
   }
 
+  async function register(name, email, password) {
+    const { token, user } = await authApi.register({ name, email, password });
+    localStorage.setItem("tourgenie_token", token);
+    setUser(user);
+    return user;
+  }
+
   function logout() {
     localStorage.removeItem("tourgenie_token");
     localStorage.removeItem("tourgenie_current_trip");
@@ -48,7 +55,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

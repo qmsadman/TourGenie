@@ -1,7 +1,8 @@
 # TourGenie API
 
-This Express and MongoDB API supports the login and dashboard pages. It exposes
-health, login, current-user, and authenticated trip-list endpoints.
+This Express and MongoDB API supports the login, registration, and dashboard
+pages. It exposes health, login, registration, current-user, and authenticated
+trip-list endpoints.
 
 From the repository root, copy `.env.example` to `.env` in this directory and
 set `MONGODB_URI` and `JWT_SECRET`. Install dependencies with `npm run
