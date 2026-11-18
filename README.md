@@ -30,7 +30,24 @@ Requirements: Node.js 20.19+ (or 22.12+) and a MongoDB connection string.
 Open the Vite URL shown in the client terminal. The demo login is
 `moontashir@tourgenie.ai` / `Traveler123!`.
 
-The client contains four routes: `/`, `/login`, `/register`, and
-`/dashboard`. You can create an account from the Register page; the API stores
-accounts and saved trips in MongoDB. The demo account remains available after
-seeding.
+The client has five routes: `/`, `/login`, `/register`, `/forgot-password`
+and `/dashboard`. You can create an account from the Register page; the API
+stores accounts and saved trips in MongoDB. The demo account remains
+available after seeding.
+
+### Password recovery
+
+Forgot password emails a six-digit code that lasts two minutes. To send real
+email, set `MAIL_USER` and `MAIL_PASS` in `tourgenie-server/.env` (a Gmail App
+Password works). Without them the server logs the email and, in development,
+the page shows the code instead, so the flow still works offline.
+
+### Tests
+
+```sh
+npm test --prefix tourgenie-server
+```
+
+The auth tests create and drop their own database (`tourgenie_authtest`), so
+they never touch real accounts. They need `MONGODB_URI` in
+`tourgenie-server/.env`.
