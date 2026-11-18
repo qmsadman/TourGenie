@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { AlertCircle, Lock, Mail } from "lucide-react";
+import { AlertCircle, Clock, Lock, Mail } from "lucide-react";
 import AuthLayout from "../components/AuthLayout";
 import { useAuth } from "../context/AuthContext";
+import { consumeSessionExpiredNotice } from "../lib/api";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -12,6 +13,9 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  // Set when the API client ended an expired session and sent us here. Read
+  // once, on mount, so it doesn't reappear after a failed login attempt.
+  const [expired] = useState(consumeSessionExpiredNotice);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -34,6 +38,13 @@ export default function Login() {
     >
       <h1 className="font-display text-2xl text-paper mb-1">Welcome back</h1>
       <p className="text-sm text-paper/50 mb-6">Log in to continue to your dashboard.</p>
+
+      {expired && !error && (
+        <div className="flex items-start gap-2 bg-teal/10 border border-teal/30 text-teal text-sm rounded-lg px-3 py-2.5 mb-4">
+          <Clock className="w-4 h-4 shrink-0 mt-0.5" />
+          <span>Your session ended — please log in again to pick up where you left off.</span>
+        </div>
+      )}
 
       {error && (
         <div className="flex items-start gap-2 bg-sunset/10 border border-sunset/30 text-sunset text-sm rounded-lg px-3 py-2.5 mb-4">
@@ -73,6 +84,11 @@ export default function Login() {
             />
           </div>
         </label>
+
+        <div className="flex justify-end">
+          <Link to="/forgot-password" className="text-sm text-teal hover:text-teal-dark">Forgot password?</Link>
+        </div>
+
         <button
           type="submit"
           disabled={loading}
