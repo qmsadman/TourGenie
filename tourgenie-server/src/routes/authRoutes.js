@@ -1,10 +1,30 @@
 import { Router } from "express";
-import { getMe, login, register } from "../controllers/authController.js";
+import {
+  register,
+  login,
+  getMe,
+  forgotPassword,
+  verifyOtp,
+  resetPassword,
+  changePassword,
+} from "../controllers/authController.js";
 import { protect } from "../middleware/auth.js";
+import { loginFailureLimiter, authWriteLimiter } from "../middleware/rateLimit.js";
 
 const router = Router();
-router.post("/login", login);
-router.post("/register", register);
+
+router.post("/register", authWriteLimiter, register);
+// `guard` only reads the count; the handler calls `penalise` on a wrong
+// password, so signing in correctly is never rationed.
+router.post("/login", loginFailureLimiter.guard, login);
 router.get("/me", protect, getMe);
+
+// Changing a known password. Ends every other session on the account.
+router.post("/change-password", protect, changePassword);
+
+// Password recovery — /forgot-password doubles as the resend endpoint.
+router.post("/forgot-password", authWriteLimiter, forgotPassword);
+router.post("/verify-otp", verifyOtp);
+router.post("/reset-password", resetPassword);
 
 export default router;
