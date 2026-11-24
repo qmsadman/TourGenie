@@ -1,6 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { Compass, LogOut } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+
+const NAV_LINKS = [
+  { to: "/dashboard", label: "Dashboard" },
+  { to: "/destinations", label: "Destinations" },
+];
 
 export default function AppShell({ title, subtitle, children }) {
   const { user, logout } = useAuth();
@@ -9,10 +14,25 @@ export default function AppShell({ title, subtitle, children }) {
     <div className="min-h-screen bg-paper text-ink-900">
       <header className="border-b border-sand bg-surface">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
-          <Link to="/" className="flex items-center gap-2 font-display text-lg">
-            <Compass className="w-5 h-5 text-teal-dark" />
-            TourGenie <span className="text-sunset">AI</span>
-          </Link>
+          <div className="flex items-center gap-6">
+            <Link to="/" className="flex items-center gap-2 font-display text-lg">
+              <Compass className="w-5 h-5 text-teal-dark" />
+              TourGenie <span className="text-sunset">AI</span>
+            </Link>
+            <nav className="flex items-center gap-4">
+              {NAV_LINKS.map((link) => (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  className={({ isActive }) =>
+                    `text-sm font-medium ${isActive ? "text-teal-dark" : "text-ink-600 hover:text-ink-900"}`
+                  }
+                >
+                  {link.label}
+                </NavLink>
+              ))}
+            </nav>
+          </div>
           <div className="flex items-center gap-4">
             <span className="hidden sm:inline text-sm text-ink-600">{user?.name}</span>
             <button

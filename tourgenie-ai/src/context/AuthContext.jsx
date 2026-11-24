@@ -41,8 +41,8 @@ export function AuthProvider({ children }) {
     return user;
   }
 
-  async function register(name, email, password) {
-    const { token, user } = await authApi.register({ name, email, password });
+  async function register(name, email, password, country_code) {
+    const { token, user } = await authApi.register({ name, email, password, country_code });
     localStorage.setItem("tourgenie_token", token);
     setUser(user);
     return user;

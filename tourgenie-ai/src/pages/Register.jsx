@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AlertCircle, Lock, Mail, UserRound } from "lucide-react";
+import { AlertCircle, Globe2, Lock, Mail, UserRound } from "lucide-react";
 import AuthLayout from "../components/AuthLayout";
 import { useAuth } from "../context/AuthContext";
+import { referenceApi } from "../lib/api";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -10,15 +11,29 @@ export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [countries, setCountries] = useState([]);
+  const [countryCode, setCountryCode] = useState("BD");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // The picker is a nicety, not a gate: if the list can't load, the field
+  // stays hidden and the account takes the server's default country.
+  useEffect(() => {
+    referenceApi
+      .countries()
+      .then(({ countries }) => {
+        setCountries(countries || []);
+        if (countries?.length && !countries.some((c) => c.code === "BD")) setCountryCode(countries[0].code);
+      })
+      .catch(() => setCountries([]));
+  }, []);
 
   async function handleSubmit(event) {
     event.preventDefault();
     setError("");
     setLoading(true);
     try {
-      await register(name, email, password);
+      await register(name, email, password, countries.length ? countryCode : undefined);
       navigate("/dashboard", { replace: true });
     } catch (err) {
       setError(err.message || "Couldn't create your account");
@@ -73,6 +88,26 @@ export default function Register() {
             />
           </div>
         </label>
+        {countries.length > 0 && (
+          <label className="block">
+            <span className="text-sm font-medium text-paper/60 mb-1.5 block">Country</span>
+            <div className="flex items-center gap-2 bg-ink-900 border border-ink-700 rounded-lg px-3 focus-within:border-teal">
+              <Globe2 className="w-4 h-4 text-paper/30" />
+              <select
+                value={countryCode}
+                onChange={(event) => setCountryCode(event.target.value)}
+                autoComplete="country"
+                className="bg-transparent text-paper text-sm py-2.5 w-full focus:outline-none cursor-pointer"
+              >
+                {countries.map((country) => (
+                  <option key={country.code} value={country.code} className="bg-ink-900 text-paper">
+                    {country.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </label>
+        )}
         <label className="block">
           <span className="text-sm font-medium text-paper/60 mb-1.5 block">Password</span>
           <div className="flex items-center gap-2 bg-ink-900 border border-ink-700 rounded-lg px-3 focus-within:border-teal">

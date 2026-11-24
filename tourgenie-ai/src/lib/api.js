@@ -104,3 +104,23 @@ export const authApi = {
 export const tripsApi = {
   list: () => request("/trips"),
 };
+
+function toQuery(params = {}) {
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== null && value !== "") query.set(key, value);
+  }
+  const text = query.toString();
+  return text ? `?${text}` : "";
+}
+
+// The public catalogue. Readable without signing in.
+export const destinationsApi = {
+  list: (params) => request(`/destinations${toQuery(params)}`, { auth: false }),
+  get: (idOrSlug) => request(`/destinations/${encodeURIComponent(idOrSlug)}`, { auth: false }),
+};
+
+export const referenceApi = {
+  countries: () => request("/reference/countries", { auth: false }),
+  interestTags: () => request("/reference/interest-tags", { auth: false }),
+};
