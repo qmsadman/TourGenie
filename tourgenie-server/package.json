@@ -8,7 +8,11 @@
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
     "seed": "node src/seed/index.js",
-    "test": "node --test 'test/**/*.test.js'"
+    "seed:catalog": "node src/seed/index.js --catalog-only",
+    "seed:demo": "node src/seed/index.js --demo-only",
+    "seed:validate": "node src/seed/validateCatalog.js",
+    "db:verify": "node src/scripts/verify.js",
+    "test": "node --test test/*.test.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
