@@ -3,6 +3,8 @@ import cors from "cors";
 import morgan from "morgan";
 import authRoutes from "./routes/authRoutes.js";
 import tripRoutes from "./routes/tripRoutes.js";
+import destinationRoutes from "./routes/destinationRoutes.js";
+import referenceRoutes from "./routes/referenceRoutes.js";
 import { errorHandler, notFound } from "./middleware/errorHandler.js";
 
 const app = express();
@@ -51,6 +53,8 @@ app.use(morgan("dev"));
 app.get("/api/health", (_req, res) => res.json({ status: "ok", service: "TourGenie API" }));
 app.use("/api/auth", authRoutes);
 app.use("/api/trips", tripRoutes);
+app.use("/api/destinations", destinationRoutes);
+app.use("/api/reference", referenceRoutes);
 app.use(notFound);
 app.use(errorHandler);
 

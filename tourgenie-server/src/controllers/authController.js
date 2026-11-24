@@ -2,6 +2,7 @@ import crypto from "node:crypto";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import Country from "../models/Country.js";
 import PasswordReset, {
   OTP_TTL_SECONDS,
   RESEND_COOLDOWN_SECONDS,
@@ -54,6 +55,18 @@ export const register = asyncHandler(async (req, res) => {
   if (password.length < MIN_PASSWORD_LENGTH) {
     return res.status(400).json({ message: `Password must be at least ${MIN_PASSWORD_LENGTH} characters` });
   }
+  // The country picker is optional; without it the account keeps the model's
+  // Bangladesh default. When one is sent it has to be a country we know, so
+  // the name and code stored on the user always agree with the catalogue.
+  const countryCode = String(req.body?.country_code || "").trim().toUpperCase();
+  let country = null;
+  if (countryCode) {
+    country = await Country.findOne({ code: countryCode, is_active: true }).select("code name").lean();
+    if (!country) {
+      return res.status(400).json({ message: "Choose a country from the list" });
+    }
+  }
+
   if (await User.exists({ email })) {
     return res.status(409).json({ message: "An account with this email already exists" });
   }
@@ -62,6 +75,7 @@ export const register = asyncHandler(async (req, res) => {
     name,
     email,
     password_hash: await bcrypt.hash(password, 10),
+    ...(country ? { country: country.name, country_code: country.code } : {}),
   });
   res.status(201).json({ token: generateToken(user), user: publicUser(user) });
 });
